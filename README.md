@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Advanced Android Sample App
 ===================================
 
@@ -50,3 +51,6 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
 License for the specific language governing permissions and limitations under
 the License.
 
+=======
+# Sunshine-Watchface
+>>>>>>> ceb855a012c676a15f764d81cdbeda994df05dac
