@@ -65,13 +65,12 @@ public class MainActivity extends AppCompatActivity implements
     private static final String HIGH_TEMP_KEY = "high-temp";
     private static final String LOW_TEMP_KEY = "low-temp";
 
-    private String[] mWearableProjection = {
+    private String[] wearableProjection = {
             WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
             WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
             WeatherContract.WeatherEntry.COLUMN_WEATHER_ID
     };
 
-    // Tied to mWearableProjection
     static final int COL_WEATHER_MAX_TEMP = 0;
     static final int COL_WEATHER_MIN_TEMP = 1;
     static final int COL_WEATHER_ID = 2;
@@ -260,21 +259,18 @@ public class MainActivity extends AppCompatActivity implements
         for (DataEvent event : dataEventBuffer) {
             String path = event.getDataItem().getUri().getPath();
             if (path.equals(WEATHER_REQUEST_PATH)) {
-                //Log.i(LOG_TAG, "Path is all good");
-                // Get the cursor
+
                 Cursor cursor = getContentResolver().query(
                         WeatherContract.WeatherEntry.CONTENT_URI,
-                        mWearableProjection,
+                        wearableProjection,
                         null,
                         null,
                         null);
 
                 if (cursor == null) {
-                    //Log.e(LOG_TAG, "Cursor is null.");
                     return;
                 }
 
-                // Move to today's date
                 double high = 0;
                 double low = 0;
                 int weatherId = 0;
@@ -282,10 +278,8 @@ public class MainActivity extends AppCompatActivity implements
                     high = cursor.getDouble(COL_WEATHER_MAX_TEMP);
                     low = cursor.getDouble(COL_WEATHER_MIN_TEMP);
                     weatherId = cursor.getInt(COL_WEATHER_ID);
-                    //Log.i(LOG_TAG, "Cursor moved to first, all good!");
                 }
 
-                // Add our data for the wearable
                 PutDataMapRequest putDataMapRequest = PutDataMapRequest.create(WEATHER_PATH);
                 putDataMapRequest.getDataMap().putLong("Time", System.currentTimeMillis());
                 putDataMapRequest.getDataMap().putInt(WEATHER_ID_KEY, weatherId);
@@ -293,13 +287,10 @@ public class MainActivity extends AppCompatActivity implements
                 putDataMapRequest.getDataMap().putString(LOW_TEMP_KEY, Utility.formatTemperature(this, low));
                 putDataMapRequest.setUrgent();
 
-                //Log.i("sent", "sent");
-                // Now send the request
                 PutDataRequest request = putDataMapRequest.asPutDataRequest();
                 Wearable.DataApi.putDataItem(mGoogleApiClient, request).setResultCallback(new ResultCallback<DataApi.DataItemResult>() {
                     @Override
                     public void onResult(final DataApi.DataItemResult result) {
-                        //Log.d(LOG_TAG, "Data item status: " + result.getStatus());
                     }
                 });
             }
